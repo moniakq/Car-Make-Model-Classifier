@@ -33,6 +33,8 @@ The resulting directory structure should look like this:
     │   │   │   ├── ...
 """
 import argparse
+import pandas as pd
+import os
 
 
 def parse_args():
@@ -43,6 +45,7 @@ def parse_args():
         help=(
             "Full path to the directory having all the cars images. E.g. "
             "`/home/app/src/data/car_ims/`."
+            #"/home/manuelquiros/Documents/AnyoneAI/Sprint_05/Project/Anyone_Sprint_05_Project/Downloads/car_ims/"
         ),
     )
     parser.add_argument(
@@ -51,6 +54,7 @@ def parse_args():
         help=(
             "Full path to the CSV file with data labels. E.g. "
             "`/home/app/src/data/car_dataset_labels.csv`."
+            #"/home/manuelquiros/Documents/AnyoneAI/Sprint_05/Project/Anyone_Sprint_05_Project/Downloads/car_dataset_labels.csv"
         ),
     )
     parser.add_argument(
@@ -59,6 +63,7 @@ def parse_args():
         help=(
             "Full path to the directory in which we will store the resulting "
             "train/test splits. E.g. `/home/app/src/data/car_ims_v1/`."
+            #"/home/manuelquiros/Documents/AnyoneAI/Sprint_05/Project/Anyone_Sprint_05_Project/Downloads/car_ims_v1/"
         ),
     )
 
@@ -83,11 +88,21 @@ def main(data_folder, labels, output_data_folder):
     """
     # For this function, you must:
     #   1. Load labels CSV file
+    df=pd.read_csv(args.labels)
     #   2. Iterate over each row in the CSV, create the corresponding
     #      train/test and class folders
+    for clas in df['class'].unique():
+        os.makedirs(output_data_folder + 'train/'+clas)
+        os.makedirs(output_data_folder + 'test/'+clas)
     #   3. Copy the image to the new folder structure. We recommend you to
     #      use `os.link()` to avoid wasting disk space with duplicated files
-    # TODO
+    for i in range(len(df)):
+        path=args.data_folder+df['img_name'][i]
+        dst=args.output_data_folder+df['subset'][i]+'/'+df['class'][i]+'/'+df['img_name'][i]
+        os.link( path, dst)
+
+
+
 
 
 if __name__ == "__main__":
