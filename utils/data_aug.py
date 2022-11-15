@@ -1,3 +1,5 @@
+from tensorflow.keras import layers
+from tensorflow.keras.models import Sequential
 
 def create_data_aug_layer(data_aug_layer):
     """
@@ -29,10 +31,14 @@ def create_data_aug_layer(data_aug_layer):
     # TODO
     # Append the data augmentation layers on this list
     data_aug_layers = []
-
+    if 'random_flip' in data_aug_layer:
+        data_aug_layers.append(layers.RandomFlip(mode=data_aug_layer['random_flip']['mode'],name=data_aug_layer['random_flip']['name']))
+    if 'random_rotation' in data_aug_layer:
+        data_aug_layers.append(layers.RandomRotation(factor=data_aug_layer['random_rotation']['factor'],name=data_aug_layer['random_rotation']['name']))
+    if 'random_zoom' in data_aug_layer:
+        data_aug_layers.append(layers.RandomZoom(height_factor=data_aug_layer['random_zoom']['height_factor'],width_factor=data_aug_layer['random_zoom']['width_factor'],name=data_aug_layer['random_zoom']['name']))
     # Return a keras.Sequential model having the the new layers created
     # Assign to `data_augmentation` variable
     # TODO
-    data_augmentation = None
-
+    data_augmentation = Sequential(data_aug_layers)
     return data_augmentation

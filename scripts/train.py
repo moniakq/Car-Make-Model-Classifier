@@ -102,8 +102,8 @@ def main(config_file):
     # We will use it to control the order of the output predictions from
     # keras is consistent
     class_names = utils.get_class_names(config)
-
     # Check if number of classes is correct
+    print(len(class_names))
     if len(class_names) != config["model"]["classes"]:
         raise ValueError(
             "The number classes between your dataset and your model"
@@ -125,6 +125,11 @@ def main(config_file):
         seed=config["seed"],
         **config["data"],
     )
+
+    #Es necesario?
+    AUTOTUNE = tf.data.AUTOTUNE
+    train_ds = train_ds.cache().shuffle(1000).prefetch(buffer_size=AUTOTUNE)
+    val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
 
     # Creates a Resnet50 model for finetuning
     cnn_model = resnet_50.create_model(**config["model"])

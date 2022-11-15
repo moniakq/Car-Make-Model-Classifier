@@ -7,15 +7,23 @@ You can use `Docker` to install all the needed packages and libraries easily. Tw
 
 - **CPU:**
 
+viejo
 ```bash
 $ docker build -t sp_05 -f docker/Dockerfile .
 ```
 
+nuevo
+docker build -t sp_05 --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) -f docker/Dockerfile .
+
 - **GPU:**
 
+viejo
 ```bash
 $ docker build -t sp_05 -f docker/Dockerfile_gpu .
 ```
+
+nuevo
+docker build -t sp_05 --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) -f docker/Dockerfile_gpu .
 
 ### Run Docker
 
@@ -40,7 +48,6 @@ $ docker run --rm --net host --gpus all -it \
 ```
 
 ### Run Unit test
-
 
 ```bash
 $ pytest tests/
