@@ -142,7 +142,9 @@ def create_model(
         # For this particular case we want to load our already defined and
         # finetuned model, see how to do this using keras
         # Assign it to `model` variable
-        # TODO
-        model = None
+        # TODO 
+        # 
+        # keras.loadmodel
+        # model = model.trainable
 
     return model
