@@ -146,5 +146,5 @@ def create_model(
         # 
         # keras.loadmodel
         # model = model.trainable
-
+        model = None
     return model
