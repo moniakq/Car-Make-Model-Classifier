@@ -130,6 +130,10 @@ def create_model(
         # TODO
         outputs = keras.layers.Dense(classes, activation='softmax')(dropout)
 
+        #layer = layers.Dense(64,kernel_regularizer=regularizers.L1L2(l1=1e-5, l2=1e-4)) 
+        #model.get_layer('NOMBRE').kernel_regularizer = l2(0.01) 
+        #model.get_layer('NOMBRE').kernel_regularizer = regularizers.l2(0.01) 
+
         # Now you have all the layers in place, create a new model
         # Use keras.Model()
         # Assign it to `model` variable
@@ -141,5 +145,6 @@ def create_model(
         # Assign it to `model` variable
         # TODO 
         model = keras.models.load_model(str(weights))
+        model.trainable = True
     return model
 
