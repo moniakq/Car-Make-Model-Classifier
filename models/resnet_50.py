@@ -6,9 +6,8 @@ import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
-from tensorflow.keras import callbacks
-from tensorflow.keras.models import Sequential
-from tensorflow.keras import regularizers
+
+
 
 def create_model(
     weights: str = None,
@@ -17,11 +16,11 @@ def create_model(
     data_aug_layer: dict = None,
     classes: int = None,
 ):
-    print(weights)
-    print(input_shape)
-    print(dropout_rate)
-    print(data_aug_layer)
-    print(classes)
+    # print(weights)
+    # print(input_shape)
+    # print(dropout_rate)
+    # print(data_aug_layer)
+    # print(classes)
     """
     Creates and loads the Resnet50 model we will use for our experiments.
     Depending on the `weights` parameter, this function will return one of
@@ -136,15 +135,11 @@ def create_model(
         # Assign it to `model` variable
         # TODO
         model = keras.Model(input, outputs)
-        for lay in model.layers:
-            print(lay)
     else:
         # For this particular case we want to load our already defined and
         # finetuned model, see how to do this using keras
         # Assign it to `model` variable
         # TODO 
-        # 
-        # keras.loadmodel
-        # model = model.trainable
-        model = None
+        model = keras.models.load_model(str(weights))
     return model
+

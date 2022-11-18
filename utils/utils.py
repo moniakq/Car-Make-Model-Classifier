@@ -1,6 +1,10 @@
 import os
 import yaml
 
+import tensorflow as tf
+import numpy as np
+
+
 
 def validate_config(config):
     """
@@ -144,7 +148,26 @@ def predict_from_folder(folder, model, input_size, class_names):
     # the highest probability and use that to get the corresponding class
     # name from `class_names` list.
     # TODO
-    predictions = None
-    labels = None
+    predictions = ()
+    labels = []
+    i=0
+    for root, dirs, files in os.walk(folder, topdown=False):
+        for name in files:
+            i=i+1
+            print(i)
+            print(os.path.join(root, name))
+            img = tf.keras.utils.load_img(os.path.join(root, name), target_size=input_size)
+            img_array = tf.keras.utils.img_to_array(img)
+            img_array = tf.expand_dims(img_array, 0)
+            predictions = model.predict(img_array)
+            max_idx = np.argmax(predictions)
+            max_score = predictions[0][max_idx]
+            predicted_class = class_names[max_idx]
+            #print('max_score=',max_score,'class=',predicted_class)
+            predictions= np.append(predictions,max_score)
+            labels=np.append(labels,predicted_class)
+
+    
+
 
     return predictions, labels
