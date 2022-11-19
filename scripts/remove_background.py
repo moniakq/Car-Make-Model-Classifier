@@ -9,7 +9,10 @@ same directory structure with its subfolders but with new images.
 """
 
 import argparse
-
+from utils.detection import get_vehicle_coordinates
+import pandas as pd
+import cv2
+import os
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Train your model.")
@@ -58,6 +61,40 @@ def main(data_folder, output_data_folder):
     #      to create additional subfolders following the original
     #      `data_folder` structure.
     # TODO
+
+    #df=pd.read_csv('/home/app/src/data/car_dataset_labels.csv')
+    a=data_folder+'/car_dataset_labels.csv'
+    df=pd.read_csv(a)
+
+
+    for clas in df['class'].unique():
+        a=output_data_folder + '/cars_ims_v2/'
+
+        if os.path.isdir(a + 'train/'+clas) is False:
+            os.makedirs(a + 'train/'+clas)
+        if os.path.isdir(a+ 'test/'+clas) is False:  
+            os.makedirs(a + 'test/'+clas)
+        # if os.path.isdir('/home/app/src/data/cars_ims_v2/' + 'train/'+clas) is False:
+        #     os.makedirs('/home/app/src/data/cars_ims_v2/' + 'train/'+clas)
+        # if os.path.isdir('/home/app/src/data/cars_ims_v2/' + 'test/'+clas) is False:  
+        #     os.makedirs('/home/app/src/data/cars_ims_v2/' + 'test/'+clas)
+
+    #for root, dirs, files in os.walk("/home/app/src/data/car_ims_v1/", topdown=False):
+    for root, dirs, files in os.walk(data_folder+"/car_ims_v1/", topdown=False):
+        for name in files:
+            im = cv2.imread(os.path.join(root, name))
+            coordinates = get_vehicle_coordinates(os.path.join(root, name))
+            cropped_im = im[coordinates[1]:coordinates[3],coordinates[0]:coordinates[2],:]
+            a=root[:28]+'2/'+root[30:]+'/'+name
+            cv2.imwrite(a, cropped_im)
+
+    # for root, dirs, files in os.walk('../data/cars_ims_v1/', topdown=False):
+    #     for name in files:
+    #         coordinates = get_vehicle_coordinates(os.path.join(root, name))
+    #         cropped_im = im[ycoordinates[1]:coordinates[3],coordinates[0]:coordinates[2],:]
+    #         cv2.imwrite(root[:14]+'2'+root[15:], cropped_im)
+
+            
 
 
 if __name__ == "__main__":

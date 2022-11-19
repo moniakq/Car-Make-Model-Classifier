@@ -1,6 +1,7 @@
 from detectron2 import model_zoo
 from detectron2.config import get_cfg
 from detectron2.engine.defaults import DefaultPredictor
+import cv2
 
 # The chosen detector model is "COCO-Detection/faster_rcnn_R_101_FPN_3x.yaml"
 # because this particular model has a good balance between accuracy and speed.
@@ -8,6 +9,8 @@ from detectron2.engine.defaults import DefaultPredictor
 # Detectron2 models
 # https://colab.research.google.com/drive/16jcaJoc6bCFAQ96jDe2HwtXj7BMD_-m5.
 # Assign the loaded detection model to global variable DET_MODEL
+
+
 cfg = get_cfg()
 cfg.merge_from_file(
     model_zoo.get_config_file("COCO-Detection/faster_rcnn_R_101_FPN_3x.yaml")
@@ -59,6 +62,33 @@ def get_vehicle_coordinates(img):
         Also known as [x1, y1, x2, y2].
     """
     # TODO
-    box_coordinates = None
-
+    im = cv2.imread(img)
+    outputs = DET_MODEL(im)
+    interest_classes = [2,7]
+    classes = outputs["instances"].pred_classes.cpu().numpy()
+    boxes = outputs["instances"].pred_boxes.tensor.cpu().numpy()
+    print(img)
+    print(boxes)
+    box_coordinates=[]
+    if boxes is not None:
+        print('primer if')
+        n = classes.shape[0]
+        interest_bboxes = []
+        for i in range(n):
+            if classes[i] in interest_classes:
+                interest_bboxes.append(boxes[i,:].astype(int))
+        area=0
+        if interest_bboxes is not None:
+            for box in interest_bboxes:
+                area1=(box[2]-box[0])*(box[3]-box[1])
+                print(area1)
+                if area1>area:
+                    area = area1
+                    box_coordinates=[box[0],box[1],box[2],box[3]]
+        else:
+            box_coordinates = [0,0,im.shape[0],im.shape[1]]
+    else:
+        box_coordinates = [0,0,im.shape[0],im.shape[1]]
+    if len(box_coordinates)==0:
+        box_coordinates = [0,0,im.shape[0],im.shape[1]]
     return box_coordinates
