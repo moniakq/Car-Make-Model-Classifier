@@ -62,8 +62,8 @@ def get_vehicle_coordinates(img):
         Also known as [x1, y1, x2, y2].
     """
     # TODO
-    im = cv2.imread(img)
-    outputs = DET_MODEL(im)
+    #im = cv2.imread(img)
+    outputs = DET_MODEL(img)
     interest_classes = [2,7]
     classes = outputs["instances"].pred_classes.cpu().numpy()
     boxes = outputs["instances"].pred_boxes.tensor.cpu().numpy()
@@ -86,9 +86,9 @@ def get_vehicle_coordinates(img):
                     area = area1
                     box_coordinates=[box[0],box[1],box[2],box[3]]
         else:
-            box_coordinates = [0,0,im.shape[0],im.shape[1]]
+            box_coordinates = [0,0,img.shape[1],imgshape[0]]
     else:
-        box_coordinates = [0,0,im.shape[0],im.shape[1]]
+        box_coordinates = [0,0,img.shape[1],img.shape[0]]
     if len(box_coordinates)==0:
-        box_coordinates = [0,0,im.shape[0],im.shape[1]]
+        box_coordinates = [0,0,img.shape[1],img.shape[0]]
     return box_coordinates
