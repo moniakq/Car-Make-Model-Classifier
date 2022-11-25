@@ -157,12 +157,14 @@ def predict_from_folder(folder, model, input_size, class_names):
             img = tf.keras.utils.load_img(os.path.join(root, name), target_size=input_size)
             img_array = tf.keras.utils.img_to_array(img)
             img_array = tf.expand_dims(img_array, 0)
-            predictions = model.predict(img_array)
-            max_idx = np.argmax(predictions)
-            max_score = predictions[0][max_idx]
+            pred = model.predict(img_array)
+            max_idx = np.argmax(pred)
+            max_score = pred[0][max_idx]
             predicted_class = class_names[max_idx]
-            predictions= np.append(predictions,max_score)
+            predictions= np.append(predictions,max_score.astype(str))
+            print(len(predictions))
             labels=np.append(labels,predicted_class)
+            print(len(labels))
 
     
 

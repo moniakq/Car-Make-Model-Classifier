@@ -83,7 +83,7 @@ def main(data_folder, output_data_folder):
     for root, dirs, files in os.walk(data_folder+"/car_ims_v1/", topdown=False):
         for name in files:
             im = cv2.imread(os.path.join(root, name))
-            coordinates = get_vehicle_coordinates(os.path.join(root, name))
+            coordinates = get_vehicle_coordinates(im)
             cropped_im = im[coordinates[1]:coordinates[3],coordinates[0]:coordinates[2],:]
             a=root[:28]+'2/'+root[30:]+'/'+name
             cv2.imwrite(a, cropped_im)
