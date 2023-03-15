@@ -2,4 +2,4 @@ data/
 manu_tests.ipynb
 models/__pycache__/
 utils/__pycache__/
-
+experiments/
